@@ -4,7 +4,8 @@
 - [create_dataset_to_tsv.ipynb](#create_dataset_to_tsvipynb)
 - [colab_training_code.ipynb](#colab_training_codeipynb)
 - [main.ipynb](#mainipynb)
-- [데이터셋, 모델(학습 가중치, 토크나이저), exe실행파일 다운로드](#데이터셋, 모델(학습 가중치, 토크나이저), exe실행파일 다운로드)
+- [데이터셋, 모델(학습 가중치, 토크나이저), exe실행파일 다운로드](#데이터셋-모델학습-가중치-토크나이저-exe실행파일-다운로드)
+
 
 
 
