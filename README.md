@@ -8,7 +8,9 @@
 - [KoBART-summarization](https://github.com/seujung/KoBART-summarization)
 
 
-
+<br/>
+<br/>
+<br/>
 
 ## `create_dataset_to_tsv.ipynb`
 - 데이터셋을 tsv로 추출하는 코드 (jupyter notebook)
@@ -32,7 +34,8 @@
 #### 2. 데이터를 TSV 형식으로 변환합니다.
 학습 데이터와 시험 데이터를 각각 `dataset_train_all_현재시간.tsv`, `dataset_valid_all_현재시간.tsv`라는 이름으로 저장합니다. 저장 시 각 항목은 탭으로 구분됩니다.
 
-
+<br/>
+<br/>
 
 ## `colab_training_code.ipynb`
 - KoBART를 이용하여 데이터셋을 학습 (colab)
@@ -124,7 +127,8 @@ model = BartForConditionalGeneration.from_pretrained(model_binary_path)
 tokenizer = PreTrainedTokenizerFast.from_pretrained('gogamza/kobart-base-v2')
 ```
 
-
+<br/>
+<br/>
 
 ## `main.ipynb`
 - 파이썬 tkinter 라이브러리를 이용하여 GUI 설정
