@@ -113,26 +113,95 @@ GPU를 사용
 !python get_model_binary.py --model_binary '/content/drive/MyDrive/KoBART-summarization-main/KoBART-summarization-main/checkpoint/summarization_final/epoch=99-
 ```
 
-### 4. 학습 모델 불러오기
-```python
-import torch
-from transformers import PreTrainedTokenizerFast
-from transformers.models.bart import BartForConditionalGeneration
 
-# 모델 바이너리 파일 경로
-model_binary_path = '/content/drive/MyDrive/KoBART-summarization-main/KoBART-summarization-main/kobart_summary'
-
-# KoBART 모델 및 토크나이저 로드
-model = BartForConditionalGeneration.from_pretrained(model_binary_path)
-tokenizer = PreTrainedTokenizerFast.from_pretrained('gogamza/kobart-base-v2')
-```
 
 <br/>
 <br/>
 
 ## `main.ipynb`
 - 파이썬 tkinter 라이브러리를 이용하여 GUI 설정
-- 
+
+### 1. 학습 모델 불러오기
+```python
+import torch # 2.0.1
+from transformers import PreTrainedTokenizerFast # 4.32.1
+from transformers.models.bart import BartForConditionalGeneration
+
+from tkinter import scrolledtext, filedialog
+import sys
+import tkinter as tk 
+import fitz  # PDF 읽기
+import threading  # 스레딩 모듈 
+import re # 정규화
+
+# KoBART 모델 및 토크나이저 로드
+tokenizer = PreTrainedTokenizerFast.from_pretrained('./model/tokenizer')
+model = BartForConditionalGeneration.from_pretrained('./model/model')
+```
+
+
+### 2. 텍스트 입력 시 요약문을 반환하는 함수
+```python
+def summarize_text(input_text, max_length=150, min_length=40, num_beams=5, length_penalty=1.2, early_stopping=True):
+    # 입력 텍스트를 토큰화하여 인코딩
+    input_ids = tokenizer.encode(       # 입력 텍스트를 단어 ID로 변환
+        input_text,                     # 입력 텍스트
+        return_tensors="pt",            # pytorch로 변환 -> 모델에 입력하기 위해
+        max_length=1024,                # 최대 길이 1024
+        truncation=True                 # 최대 길이가 초과되면 텍스트 자르기
+    )
+
+    # 모델을 사용하여 요약 생성
+    summary_ids = model.generate(       # 문장 생성 함수 
+        input_ids,                      # 인코드한 변수
+        max_length=max_length,          # 요약문 최대 길이
+        min_length=min_length,          # 요약문 최소 길이
+        length_penalty=length_penalty,  # 요약문의 길이 설정 -> 값이 높을수록 길이가 짧아짐
+        num_beams=num_beams,            # 단어 후보의 수 -> 단어 후보 4개에서 하나를 선택 -> 클수록 정확도 향상 
+        early_stopping=early_stopping   # 더 이상 생성되는 단어가 없으면 일찍 종료할 수 있는 기능
+    )
+
+    # 요약 결과 디코딩
+    summary_text = tokenizer.decode(    # 단어 ID를 다시 텍스트로 변환
+        summary_ids[0],                 # 요약문에 해당하는 인덱스
+        skip_special_tokens=True        # 의미 있는 텍스트만 변환함 
+    )        
+    
+    return summary_text                 # 최종 요약 문장
+```
+
+### 3. GUI 설정
+- ##### 윈도우 사이즈 800 x 900
+- ##### 구성요소
+  - **원문 입력**: 요약 전 원문을 입력 및 표시되는 창
+  - **예측 요약문**: 최종적으로 요약된 텍스트가 표시되는 창
+  - **최대, 최소 길이 입력, num_beams, length_penalty, early_stopping**: 생성 파라미터 제어창
+  - **PDF 불러오기 버튼**: 파일 탐색기를 이용하여 PDF를 불러오는 버튼
+  - **테스트 원문 생성**: 테스트 원문을 입력창에 입력하는 버튼
+  - **요약문 생성**: 원문 입력에 있는 텍스트를 요약하는 버튼
+  - **설정 초기화**: 각 파라미터 값 초기화
+
+### 4. 주요 함수 설명
+#### `on_load_pdf_button_click()`
+- **기능**: PDF 파일을 불러오기 위해 사용됩니다.
+- **동작**: 파일 탐색기를 통해 PDF 파일을 선택하고, 해당 파일에서 텍스트를 추출하여 원문 입력창에 표시합니다.
+
+#### `on_summarize_button_click()`
+- **기능**: 입력된 원문을 요약하는 버튼 클릭 시 실행됩니다.
+- **동작**:
+  - 입력된 텍스트에서 한글만 추출하여, 불필요한 영어 및 특수문자를 제거합니다.
+  - `summarize_text()` 함수에 텍스트를 전달하여 요약을 생성하고, 결과를 예측 요약문 창에 표시합니다.
+
+#### 기타 슬라이더 및 버튼
+- **슬라이더**: 최대 길이, 최소 길이, 빔 수, 길이 패널티 등을 설정할 수 있는 슬라이더가 있습니다.
+- **Early Stopping 체크박스**: Early Stopping을 활성화할 수 있는 옵션을 제공합니다.
+- **설정 초기화 버튼**: 슬라이더와 체크박스의 설정을 초기화할 수 있는 버튼을 제공합니다.
+- **테스트 원문 생성 버튼**: 미리 정의된 테스트 원문을 원문 입력창에 불러오는 버튼을 제공합니다.
+
+### 코드 흐름
+1. **GUI 구성**: `tkinter`를 이용하여 윈도우, 레이블, 텍스트 박스, 버튼 등을 배치합니다.
+2. **PDF 불러오기**: `filedialog.askopenfilename()`을 사용하여 PDF 파일을 선택하고 텍스트를 추출하여 입력창에 표시합니다.
+3. **요약 생성**: 사용자가 설정한 파라미터(최대 길이, 최소 길이, 빔 수, 길이 패널티 등)에 맞게 텍스트를 요약합니다.
 
 
 
