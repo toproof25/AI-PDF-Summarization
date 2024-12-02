@@ -40,7 +40,7 @@
 ## `colab_training_code.ipynb`
 - KoBART를 이용하여 데이터셋을 학습 (colab)
 
-### 라이브러리 설치
+### 1. 라이브러리 설치
 - **pandas** : 데이터프레임 및 데이터 조작을 위한 라이브러리  
 - **torch (PyTorch)** : 딥러닝 모델 구현 및 학습을 위한 라이브러리    
 - **transformers** : 트랜스포머 기반 모델(BERT, GPT 등)을 사용하기 위한 라이브러리  
@@ -64,7 +64,7 @@
 !pip install rouge_score
 ```
 
-### 1. KoBERT 학습 시작
+### 2. KoBERT 학습 시작
 
 #### 주요 옵션
 
