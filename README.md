@@ -1,6 +1,6 @@
 ## AI-PDF-Summarization
 
-### 목차
+### 소스코드 설명 및 다운로드 (누르면 이동)
 - [create_dataset_to_tsv.ipynb](#create_dataset_to_tsvipynb)
 - [colab_training_code.ipynb](#colab_training_codeipynb)
 - [main.ipynb](#mainipynb)
