@@ -191,4 +191,4 @@ def summarize_text(input_text, max_length=150, min_length=40, num_beams=5, lengt
 ### 데이터셋, 모델(학습 가중치, 토크나이저), exe실행파일 다운로드
 - <a href="https://1drv.ms/u/s!AqYjAcj1n44riqRP0_B2RrlL1h9KyA?e=LCjHa1" target="_blank">dataset (tsv) 다운로드</a>
 - <a href="https://1drv.ms/u/s!AqYjAcj1n44riqRQN0OJ3MjBrvAuZw?e=PiJxcI" target="_blank">model 다운로드</a>
-- <a href="https://1drv.ms/u/s!AqYjAcj1n44ri4ZI3mKbJ1CxBnPoZg?e=7KXQ1x" target="_blank">exe파일 다운로드</a>
+- <a href="https://1drv.ms/u/s!AqYjAcj1n44ri4ZI3mKbJ1CxBnPoZg" target="_blank">exe파일 다운로드</a>
